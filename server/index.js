@@ -8,6 +8,10 @@ const port = process.env.PORT || 4000;
 const app = express();
 const assetFolder = Path.resolve(__dirname, '../client/public');
 
+// This handles link requests.
+const linkRouter = require('./apis/links-api.js');
+routes.use('/api/links', linkRouter);
+
 browserify.settings({
   transform: ['babelify'],
 });
