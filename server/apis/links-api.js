@@ -7,7 +7,21 @@ router.get('/yt', (req, res) => {
   Link.read()
    .then((links) => {
      res.json({ links });
+   })
+   .catch((error) => {
+     console.log('ERROR: ', error);
    });
+});
+
+router.delete('/yt:id', (req, res) => {
+  Link.remove(1)//req.body.id
+  .then((link) => {
+    console.log('link', link)
+    res.json({ link });
+  })
+  .catch((error) => {
+    console.log('ERROR: ', error);
+  });
 });
 
   // router.post('/', (req, res) => {
@@ -19,8 +33,6 @@ router.get('/yt', (req, res) => {
   //   });
   // });
 
-  // router.delete('/:todo_id', (req, res) => {
-  // });
 
   // router.put('/:todo_id', (req, res) => {
 

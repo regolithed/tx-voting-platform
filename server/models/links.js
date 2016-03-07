@@ -22,5 +22,11 @@ Link.read = function read() {
 // Link.update = function update(attrs) {
 // };
 
-// Link.remove = function remove(attrs) {
-// };
+Link.remove = function remove(id) {
+  return new Promise((resolve) => {
+    console.log('link delete', links.yt[id]);
+    var temp = links.yt[id];
+    delete(links.yt[id])
+    return resolve(temp);
+  });
+};
