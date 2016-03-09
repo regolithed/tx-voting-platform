@@ -1,7 +1,8 @@
 const R = require('ramda');
 const createReducer = (initialState, handlers) => {
-  return (state = initialState, action) =>
-    R.propOr(R.identity, action.type, handlers)(state, action);
+  return (state = initialState, action) => {
+    return R.propOr(R.identity, action.type, handlers)(state, action);
+  }
 };
 
 // This helper is a general function for dispatching actions

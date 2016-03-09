@@ -1,4 +1,3 @@
-
 const Immutable = require('immutable');
 const LOCATION_CHANGE = require('react-router-redux').LOCATION_CHANGE;
 
