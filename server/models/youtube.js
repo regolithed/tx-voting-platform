@@ -1,23 +1,33 @@
 const Request = require('../lib/request');
 const Youtube = module.exports;
 const Config = require('../../config');
-
+const Url = require('url');
+const unshortener = require('../lib/unshortener');
 
 // const sample = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
 
-
 Youtube.getInfo = (url) => {
+  'use strict';
+  let shortenedUrl;
   const base = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=';
-
-  const vidId = url.slice(url.indexOf('v=') + 2);
-  const newUrl = `${base}${vidId}&key=${Config.key}`;
-  return Request.fetch(newUrl)
-  .catch((error) => {
-    console.log('ERROR:', error);
+  if (url.indexOf('youtube.com') !== -1) {
+    shortenedUrl = Promise.resolve(url);
+  } else {
+    shortenedUrl = unshortener.expand(url).then(urls => {
+      return urls.href;
+    });
+  }
+  return shortenedUrl.then(fullUrl => {
+    const vidId = Url.parse(fullUrl, true).query.v;
+    return `${base}${vidId}&key=${Config.key}`;
+  })
+  .then((cleanUrl) => {
+    return Request.fetch(cleanUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      throw new Error('Something went wrong with the link provided:', error);
+    });
   });
-  //  relevant response info
-
-  // pass relevant response info into Link.create
 };
-
-// Youtube.getInfo(sample);

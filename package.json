@@ -38,7 +38,8 @@
     "sinon": "^1.17.3",
     "sinon-as-promised": "^4.0.0",
     "supertest": "^1.2.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "unshortener": "^0.1.0"
   },
   "scripts": {
     "start": "nodemon server/index.js",

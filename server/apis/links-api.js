@@ -47,7 +47,7 @@ router.get('/info', (req, res) => {
     res.json({ data });
   })
   .catch((error) => {
-    console.log('ERROR:', error);
+    console.log('ERROR In Links-api:', error);
   });
 });
 
