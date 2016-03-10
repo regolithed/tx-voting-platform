@@ -1,6 +1,6 @@
-const React = require('react');
-const connect = require('react-redux').connect;
-const Header = require('../components/app/Header');
+import React from 'react';
+import { connect } from 'react-redux';
+import Header from '../components/app/Header';
 
 const App = ({ main }) => {
   return (
@@ -10,7 +10,7 @@ const App = ({ main }) => {
         {main}
       </div>
     </div>
-	);
+  );
 };
 
 const mapStateToProps = (state) => {
@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
   // return R.pick(['someProp'], state);
 };
 
-const mapDispatchToProps = () => {
+const mapDispatchToProps = (dispatch) => {
   return {};
   // return {
   //   onClick: (value) => {
