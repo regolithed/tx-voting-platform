@@ -1,37 +1,34 @@
 const Request = require('../lib/request');
 const Youtube = module.exports;
 const Config = require('../../config');
-const Url = require('url')
+const Url = require('url');
 const unshortener = require('../lib/unshortener');
-
 
 // const sample = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
 
-
 Youtube.getInfo = (url) => {
+  'use strict';
+  let shortenedUrl;
   const base = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=';
-  const vidId = url.slice(url.indexOf('v=') + 2);
-  const newUrl = `${base}${vidId}&key=${Config.key}`;
-  return Request.fetch(newUrl)
-  .catch((error) => {
-    console.log('ERROR:', error);
-  });
-};
-
-Youtube.checkShortened = (url) => {
-  if (url.indexOf('youtube.com') === -1) {
-    const shortened = new Promise((resolve) =>
-      unshortener.expand(url, (error, urls) => {
-        if (error || urls.host !== 'www.youtube.com') {
-          throw new Error('You entered an incorrect url');
-        }
-        return resolve(shortened);
-      })
-    ).then(() => {
-      Youtube.getInfo(shortened);
-    });
+  if (url.indexOf('youtube.com') !== -1) {
+    shortenedUrl = Promise.resolve(url);
   } else {
-    Youtube.getInfo(url);
+    shortenedUrl = unshortener.expand(url).then(urls => {
+      return urls.href;
+    });
   }
+  return shortenedUrl.then(fullUrl => {
+    const vidId = Url.parse(fullUrl, true).query.v;
+    return `${base}${vidId}&key=${Config.key}`;
+  })
+  .then((cleanUrl) => {
+    return Request.fetch(cleanUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      throw new Error('Something went wrong with the link provided:', error);
+    });
+  });
 };
 

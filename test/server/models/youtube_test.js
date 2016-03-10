@@ -2,18 +2,15 @@
 'use strict';
 require(TEST_HELPER);
 const sinon = require('sinon');
-// const Link = require(`${__server}/models/links`);
 const Youtube = require(`${__server}/models/youtube`);
 const ytOutput = require('./ytResult').output;
-
-require('sinon-as-promised');
-// const fetch = require('isomorphic-fetch');
 const request = require('../../../server/lib/request');
-
+const unshortener = require('../../../server/lib/unshortener');
+require('sinon-as-promised');
 
 describe('The Youtube Model', () => {
   const sample = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
-
+  const shortenedSample = 'http://bit.ly/OUv03h';
   describe('Get Video Info', () => {
     it_('gets data from youtube', function * ytinfo() {
       const fetch = sinon.stub(request, 'fetch');
@@ -22,7 +19,13 @@ describe('The Youtube Model', () => {
       expect(response).to.equal(ytOutput);
       fetch.restore();
     });
-  });
 
-  // describe('Shortens a shortened link')
+    it_('expands a shortened youtube link', function * checkShort() {
+      const fetch = sinon.stub(request, 'fetch');
+      fetch.resolves(ytOutput);
+      const response = yield Youtube.getInfo(shortenedSample);
+      expect(response).to.equal(ytOutput);
+      fetch.restore();
+    });
+  });
 });
