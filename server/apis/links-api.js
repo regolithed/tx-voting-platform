@@ -42,12 +42,13 @@ router.post('/', (req, res) => {
 });
 
 router.get('/info', (req, res) => {
+  console.log("REQ", req.query.url);
   Youtube.getInfo(req.query.url)
   .then((data) => {
     res.json({ data });
   })
   .catch((error) => {
-    console.log('ERROR:', error);
+    console.log('ERROR In Links-api:', error);
   });
 });
 
