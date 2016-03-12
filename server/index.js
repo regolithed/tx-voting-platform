@@ -12,15 +12,15 @@ const port = process.env.PORT || 4000;
 const app = express();
 const assetFolder = Path.resolve(__dirname, '../client/public');
 
-// This handles link requests.
+// This handles entry requests.
 
 const apiRouter = express.Router();
 routes.use('/api', apiRouter);
 const channelRouter = express.Router();
 apiRouter.use('/:channel_id', channelRouter);
 
-const linkRouter = require('./apis/links-api.js');
-channelRouter.use('/links', linkRouter);
+const entryRouter = require('./apis/entries-api.js');
+channelRouter.use('/entries', entryRouter);
 
 browserify.settings({
   transform: ['babelify'],

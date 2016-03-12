@@ -2,13 +2,13 @@
 'use strict';
 require(TEST_HELPER);
 const sinon = require('sinon');
-const Link = require(`${__server}/models/links`);
+const Entry = require(`${__server}/models/entries`);
 const Youtube = require(`${__server}/models/youtube`);
 const request = require('supertest');
 const ytOutput = require('../models/ytResult').output;
 require('sinon-as-promised');
 
-describe('The Links API', () => {
+describe('The Entries API', () => {
   let app = null;
   let modelStub = null;
   const data = { id: 1, url: 'youtube.com/sxsw' };
@@ -20,59 +20,60 @@ describe('The Links API', () => {
     if (modelStub) modelStub.restore();
   });
 
-  describe('GET /links', () => {
-    it_('returns all links', function * testLinks() {
-      modelStub = sinon.stub(Link, 'read');
+  describe('GET /entries', () => {
+    it_('returns all entries', function * testLinks() {
+      modelStub = sinon.stub(Entry, 'read');
       modelStub.resolves(data);
       yield request(app)
-        .get('/api/yt/links')
+        .get('/api/yt/entries')
         .expect(200)
         .expect(response => {
-          expect(response.body.links).to.include(data);
+          console.log('==============-==============', response.body)
+          expect(response.body.entries).to.include(data);
         });
     });
   });
 
-  describe('DELETE /links', () => {
-    it_('deletes a link', function * deletesLinks() {
-      modelStub = sinon.stub(Link, 'remove');
+  describe('DELETE /entries', () => {
+    it_('deletes an entry', function * deletesLinks() {
+      modelStub = sinon.stub(Entry, 'remove');
       modelStub.resolves(data.id);
       yield request(app)
-        .delete('/api/yt/links/1')
+        .delete('/api/yt/entries/1')
         .expect(200)
         .expect(response => {
-          expect(response.body.link).to.equal(data.id);
-          expect(Link.remove.calledOnce).to.equal(true);
-          expect(Link.remove.calledWith('1')).to.equal(true);
+          expect(response.body.entry).to.equal(data.id);
+          expect(Entry.remove.calledOnce).to.equal(true);
+          expect(Entry.remove.calledWith('1')).to.equal(true);
         });
     });
   });
 
-  describe('PUT /links', () => {
-    it_('updates a link', function * updateLink() {
-      modelStub = sinon.stub(Link, 'update');
+  describe('PUT /entries', () => {
+    it_('updates an entry', function * updateLink() {
+      modelStub = sinon.stub(Entry, 'update');
       modelStub.resolves(data);
       yield request(app)
-        .put('/api/yt/links/1')
+        .put('/api/yt/entries/1')
         .expect(200)
         .expect(response => {
-          expect(response.body.link).to.include(data);
-          expect(Link.update.calledOnce).to.equal(true);
-          expect(Link.update.calledWith('1')).to.equal(true);
+          expect(response.body.entry).to.include(data);
+          expect(Entry.update.calledOnce).to.equal(true);
+          expect(Entry.update.calledWith('1')).to.equal(true);
         });
     });
   });
 
-  describe('POST /links', () => {
-    it_('posts a new link', function * postsLinks() {
-      modelStub = sinon.stub(Link, 'create');
+  describe('POST /entries', () => {
+    it_('posts a new entry', function * postsLinks() {
+      modelStub = sinon.stub(Entry, 'create');
       modelStub.resolves(data);
       yield request(app)
-        .post('/api/yt/links')
+        .post('/api/yt/entries')
         .expect(200)
         .expect(response => {
-          expect(response.body.returnedLink).to.include(data);
-          expect(Link.create.calledOnce).to.equal(true);
+          expect(response.body.returnedEntry).to.include(data);
+          expect(Entry.create.calledOnce).to.equal(true);
         });
     });
   });
@@ -86,12 +87,12 @@ describe('The Youtube API', () => {
     app = TestHelper.createApp();
   });
 
-  describe('GET /api/yt/links/info', () => {
+  describe('GET /api/yt/entries/info', () => {
     it_('gets video info from Youtube', function * getYTInfo() {
       const getInfo = sinon.stub(Youtube, 'getInfo');
       getInfo.resolves(ytOutput);
       yield request(app)
-        .get('/api/yt/links/info')
+        .get('/api/yt/entries/info')
         .expect(200)
         .query({ url: info })
         .expect((response) => {
@@ -105,7 +106,7 @@ describe('The Youtube API', () => {
       const getInfo = sinon.stub(Youtube, 'getInfo');
       getInfo.rejects(new Error('Invalid protocol'));
       yield request(app)
-        .get('/api/yt/links/info')
+        .get('/api/yt/entries/info')
         .query({ url: badInfo })
         .expect(500)
         .expect((response) => {

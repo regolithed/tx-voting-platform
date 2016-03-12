@@ -1,13 +1,13 @@
 /* eslint new-cap: [2, {"capIsNewExceptions": ["Router"]}] */
-const Link = require('../models/links.js');
+const Entry = require('../models/entries.js');
 const router = require('express').Router();
 const Youtube = require('../models/youtube.js');
 // These handle all of the requests to the database.
 
 router.get('/', (req, res) => {
-  Link.read()
-   .then((links) => {
-     res.json({ links });
+  Entry.read()
+   .then((entries) => {
+     res.json({ entries });
    })
    .catch((error) => {
      console.log('ERROR: ', error);
@@ -15,9 +15,9 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  Link.remove(req.params.id)
-  .then((link) => {
-    res.json({ link });
+  Entry.remove(req.params.id)
+  .then((entry) => {
+    res.json({ entry });
   })
   .catch((error) => {
     console.log('ERROR: ', error);
@@ -25,9 +25,9 @@ router.delete('/:id', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  Link.update(req.params.id) // req.body.id
-  .then((link) => {
-    res.json({ link });
+  Entry.update(req.params.id) // req.body.id
+  .then((entry) => {
+    res.json({ entry });
   })
   .catch((error) => {
     console.log('ERROR: ', error);
@@ -35,9 +35,9 @@ router.put('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  Link.create(req.body)
-    .then((returnedLink) => {
-      res.json({ returnedLink });
+  Entry.create(req.body)
+    .then((returnedEntry) => {
+      res.json({ returnedEntry });
     });
 });
 

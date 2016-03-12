@@ -1,8 +1,7 @@
 /* global TestHelper before it xit beforeEach __server */
-//require db
 process.env.NODE_ENV = 'test';
 
-const dbCleaner = require('knex-cleaner');
+// const dbCleaner = require('knex-cleaner');
 const chai = require('chai');
 const express = require('express');
 

@@ -18,8 +18,8 @@ const processData = (data) => {
 
 const Entry = {
   fetch: () => [],
-  create: (link) => {
-    console.log(link);
+  create: (entry) => {
+    console.log(entry);
   },
   getInfo: (url) => {
     return request.fetch(request.addParams('http://localhost:4000/api/yt/links/info', { url }))
