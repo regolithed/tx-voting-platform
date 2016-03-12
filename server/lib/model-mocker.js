@@ -8,7 +8,6 @@ const ModelMocker = ({ mocks = [], delay = 500, errors = {} }) => {
 
   const getInitialMocks = () => Immutable.fromJS(mocks).map(setMockID);
 
-
   let state = Immutable.fromJS({
     mocks: getInitialMocks(),
   });
@@ -55,6 +54,9 @@ const ModelMocker = ({ mocks = [], delay = 500, errors = {} }) => {
   });
 
   bindFunction('delete', (id) => {
+    if (id === undefined) {
+      state = state.update('mocks', () => Immutable.fromJS([]));
+    }
     state = state.deleteIn(['mocks', getIndexForID(id)]);
     return id;
   });

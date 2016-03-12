@@ -1,7 +1,7 @@
 /* global TEST_HELPER describe it it_ TestHelper __server __client beforeEach expect */
 'use strict';
 require(TEST_HELPER);
-const ModelMocker = require(`${__client}/lib/model-mocker`);
+const ModelMocker = require(`${__server}/lib/model-mocker`);
 
 describe('The model mocker', () => {
   let Todo = null;
@@ -47,5 +47,11 @@ describe('The model mocker', () => {
     expect(deletedID).to.equal(0);
     const readTodos = yield Todo.read();
     expect(readTodos[0]).to.contain({ text: 'two' });
+  });
+
+  it_('deletes all without an id', function * generator() {
+    yield Todo.delete();
+    const readTodos = yield Todo.read();
+    expect(readTodos).to.deep.equal([]);
   });
 });

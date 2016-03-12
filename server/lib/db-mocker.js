@@ -14,12 +14,18 @@ const getCollections = (collectionSchema) => {
 // dbMocker(collection).read etc
 const DbMocker = (collectionSchema) => {
   const collections = getCollections(collectionSchema);
-  return (collection) => {
-    if(collections[collection] === undefined) {
+  const db = (collection) => {
+    if (collections[collection] === undefined) {
       throw new Error(`${collection} collection doesnt exist`);
     }
     return collections[collection];
   };
+  db.emptyAll = () => {
+    const emptyPromises = Object.keys(collections)
+      .map(collection => collections[collection].delete());
+    return Promise.all(emptyPromises);
+  };
+  return db;
 };
 
 

@@ -31,9 +31,4 @@ describe('The db mocker', () => {
     expect(db.bind(null, 'foo_bar')).to.throw('foo_bar collection doesnt exist');
   });
 
-  it_('empties all collections on emptyAll', function * generator() {
-    db.emptyAll();
-    const readItems = yield db('todos').read();
-    expect(readItems).to.deep.equal([]);
-  });
 });
