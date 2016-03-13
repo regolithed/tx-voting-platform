@@ -19,7 +19,7 @@ const SubNav = () => {
           </div>
           <div className="navbar-right">
             <p className="navbar-item">
-              <a href="/entry/new" className="button is-success">Submit Your Entry</a>
+              <a href="/entry/new" className="button is-primary">Submit Your Entry</a>
             </p>
           </div>
         </nav>
