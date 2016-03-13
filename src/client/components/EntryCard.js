@@ -11,7 +11,7 @@ const EntryCard = ({ entry, onClick }) => {
       </div>
       <div className="card-content">
         <small>{ entry.publishedAt }</small>
-        <p className="title is-5"><a href="#" title={ entry.title }>{ entry.title }</a></p>
+        <p className="title is-5"><a href="#" onClick={onClick} title={ entry.title }>{ entry.title }</a></p>
         <div className="content">
           { entry.description }
         </div>
