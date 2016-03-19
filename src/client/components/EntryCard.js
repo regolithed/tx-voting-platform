@@ -13,18 +13,11 @@ const EntryCard = ({ entry }) => {
         </figure>
       </div>
       <div className="card-content">
-        <small><DateFormat pubDate={ entry.publishedAt } /></small>
-        <p className="title is-5 truncate"><Link to={`/entry/yt/${entry.id}`} title={ entry.title }>{ entry.title }</Link></p>
-        <div className="media">
-          <div className="media-left">
-            <figure className="image is-32x32 avatar">
-              <a href="#"><img className="is-round" src="http://placehold.it/64x64&text=C" alt="Image" /></a>
-            </figure>
-          </div>
-          <div className="media-content">
-            <p className="title is-5"><a href="#">Clay Branch</a></p>
-          </div>
-        </div>
+        <figure data-hint="Clay Branch" className="image is-48x48 avatar hint--left hint--rounded">
+          <a href="#"><img className="is-round" src="http://placehold.it/64x64&text=C" alt="Image" /></a>
+        </figure>
+        <small><i className="fa fa-eye"></i>&nbsp;23,432&nbsp;&bull;&nbsp;<DateFormat pubDate={ entry.publishedAt } /></small>
+        <p className="title is-5"><Link to={`/entry/yt/${entry.id}`} title={ entry.title }>{ entry.title }</Link></p>
       </div>
     </div>
     </div>

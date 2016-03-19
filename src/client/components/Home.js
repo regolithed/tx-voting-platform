@@ -5,7 +5,6 @@ const Home = ({ entries, onCardClick }) => {
   return (
     <div>
       <h1 className="title">Entries</h1>
-      <hr />
       <div className="columns is-multiline">
         { entries.map(entry =>
           <EntryCard

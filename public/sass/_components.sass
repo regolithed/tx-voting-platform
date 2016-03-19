@@ -4,11 +4,30 @@
 
 // Card
 .card
+  background: none
+  box-shadow: none
+  margin-bottom: 30px
+  a
+    color: $primary_dark
+    border-bottom: 1px solid
+    font-weight: 700
+    &:hover
+      color: $primary
+  .card-content
+    .title
+      margin-bottom: 5px
+    padding: 15px 2px
+    position: relative
+    .fa
+      top: 5px
+      position: relative
   .content
     margin: 0 auto 2em
   .avatar
-    position: relative
-    top: -3px
+    position: absolute
+    top: -15px
+    right: 5px
+    border-width: 4px
   .card-image
     transition: all 0.3s ease
     background: #000
@@ -42,7 +61,8 @@
 
 .avatar
   border-radius: 100%
-  border: 2px solid $border
+  border: 2px solid $grey-lighter
+  background: $grey-lighter
   &.header
     margin-left: 8px
     max-height: 32px
@@ -75,6 +95,8 @@
     .fa
       position: relative
       top: 3px
+  .avatar
+    top: -3px
 
 .entry-control 
   margin-top: 1.2em
