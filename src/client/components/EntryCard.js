@@ -15,7 +15,7 @@ const EntryCard = ({ entry }) => {
       </div>
       <div className="card-content">
         <figure data-hint="Clay Branch" className="image is-48x48 avatar hint--left hint--rounded">
-          <a href="#"><img className="is-round" src="http://placehold.it/64x64&text=C" alt="Image" /></a>
+          <a href="#"><img className="is-round" src="https://avatars2.githubusercontent.com/u/1420404?v=3&s=400" alt="Image" /></a>
         </figure>
         <small><i className="fa fa-eye"></i>&nbsp;23,432&nbsp;&bull;&nbsp;<DateFormat pubDate={ entry.publishedAt } /></small>
         <p className="title is-5"><Link to={`/entry/yt/${entry.id}`} title={ entry.title }>{ entry.title }</Link></p>

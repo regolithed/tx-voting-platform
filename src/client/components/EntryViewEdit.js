@@ -19,6 +19,7 @@ const EntryViewEdit = ({ isCreatingNew, isWorking, updateEntry, createEntry, ent
           <textarea onChange={onDescriptionChange} className="textarea" defaultValue={entry.description}></textarea>
         </p>
         <p className="control">
+        <button className="button is-danger is-pulled-right is-outlined"><i className="fa fa-times"></i>Delete Entry</button>
           <button onClick={function clickControl() {
             if (isCreatingNew) {
               createEntry(entry);
