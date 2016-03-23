@@ -31,8 +31,26 @@ const EntryViewShow = ({ entry }) => {
               </div>
             </div>
             <hr />
-            <h3 className="title is-6 heading"><i className="fa fa-youtube"></i>&nbsp;YouTube</h3>
-            <a className="is-block" href={`https://youtu.be/${entry.embedID}`}>youtu.be/{entry.embedID}</a>
+            <div className="columns">
+              <div className="column is-half">
+                <h3 className="title is-6 heading"><i className="fa fa-youtube"></i>&nbsp;YouTube</h3>
+                <a className="is-block" href={`https://youtu.be/${entry.embedID}`}>youtu.be/{entry.embedID}</a>
+              </div>
+              <div className="column is-half">
+                <h3 className="title is-6 heading"><i className="fa fa-share"></i>&nbsp;Share</h3>
+                <ul>
+                  <li className="is-inline">
+                    <a target="_new" data-hint="Share on Twitter" className="hint--top hint--rounded" href={`https://twitter.com/intent/tweet?via=texansvote&amp;text=${entry.title}&amp;url=http://texaxs.vote/entry/yt/${entry.id}`}><span className="icon"><i className="fa fa-twitter-square"></i></span></a>
+                  </li>
+                  <li className="is-inline">
+                    <a target="_new" data-hint="Share on Facebook" className="hint--top hint--rounded" href={`https://www.facebook.com/sharer/sharer.php?u=http://texaxs.vote/entry/yt/${entry.id}`}><span className="icon"><i className="fa fa-facebook-square"></i></span></a>
+                  </li>
+                  <li className="is-inline">
+                    <a target="_new" data-hint="Share on Reddit" className="hint--top hint--rounded" href={`https:////www.reddit.com/submit?title=${entry.title}&amp;url=http://texaxs.vote/entry/yt/${entry.id}`}><span className="icon"><i className="fa fa-reddit-square"></i></span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <EntryEditControl entryID={entry.id} />
           </div>
         </div>

@@ -5,7 +5,7 @@ const EntryEditControl = ({ entryID }) => {
   return (
     <div className="entry-control">
       <p>
-        <Link to={`/entry/yt/edit/${entryID}`} className="button is-primary"><i className="fa fa-pencil"></i>Edit Entry</Link>
+        <Link to={`/entry/yt/edit/${entryID}`} className="button is-success"><i className="fa fa-pencil"></i>Edit Entry</Link>
       </p>
     </div>
   );
