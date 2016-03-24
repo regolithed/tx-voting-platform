@@ -5,6 +5,8 @@ const sinon = require('sinon');
 const User = require(`${__server}/models/users`);
 const request = require('supertest');
 require('sinon-as-promised');
+const Sessions = require(`${__server}/models/sessions`);
+
 
 const fakeUser = {
   id: 1,
@@ -28,12 +30,17 @@ const success = { success: true, id: 1 };
 describe('The Users API', () => {
   let app = null;
   let modelStub = null;
+  let sessionFetch = null;
+
   beforeEach(() => {
     app = TestHelper.createApp();
+    sessionFetch = sinon.stub(Sessions, 'fetchByID');
+    sessionFetch.resolves('test');
   });
 
   afterEach(() => {
     if (modelStub) modelStub.restore();
+    sessionFetch.restore();
   });
 
   describe('when calling GET /users', () => {

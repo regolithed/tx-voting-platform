@@ -217,7 +217,7 @@ describe('The entries model', () => {
     expect(foundEntry).to.deep.equal(entry);
   });
 
-  describe.only('the createdByUser helper', () => {
+  describe('the createdByUser helper', () => {
     it_('returns true if an entry was created by a user', function * getVideos() {
       yield Entries.create(entry);
       const isCreatedByUser = yield Entries.createdByUser(8, 0);

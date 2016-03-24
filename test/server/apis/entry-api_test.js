@@ -8,18 +8,21 @@ const request = require('supertest');
 const ytOutput = require('../models/ytResult').output;
 require('sinon-as-promised');
 const Sessions = require(`${__server}/models/sessions`);
-const db = require(`${__server}/lib/db`);
 
 describe('The Entries API', () => {
   let app = null;
   let modelStub = null;
   const data = { id: 1, url: 'youtube.com/sxsw' };
-  
+  let sessionFetch = null;
+
   beforeEach_(function * generator() {
     app = TestHelper.createApp();
+    sessionFetch = sinon.stub(Sessions, 'fetchByID');
+    sessionFetch.resolves('test');
   });
 
   afterEach(() => {
+    sessionFetch.restore();
     if (modelStub) modelStub.restore();
   });
 
@@ -37,19 +40,15 @@ describe('The Entries API', () => {
     });
   });
 
-  describe.only('DELETE /entries', () => {
+  describe('DELETE /entries', () => {
     it_('deletes an entry', function * deletesLinks() {
       modelStub = sinon.stub(Entry, 'remove');
       modelStub.resolves({ success: true });
-      const sessionFetch = sinon.stub(Sessions, 'fetchByID');
-      sessionFetch.resolves('test')
       // console.log('sessions', session)
       yield request(app)
         .delete('/api/yt/entries/1')
         .expect(200)
-        .set('session-id', 'test')
         .expect(response => {
-          console.log('responsesdfa', response.body)
           expect(modelStub.calledWith('1')).to.equal(true);
           expect(response.body.data.success).to.equal(true);
         });
@@ -88,8 +87,16 @@ describe('The Youtube API', () => {
   let app = null;
   const info = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
   const badInfo = 'bit.ly/1pbHRQy';
+  let sessionFetch = null;
+
   beforeEach(() => {
     app = TestHelper.createApp();
+    sessionFetch = sinon.stub(Sessions, 'fetchByID');
+    sessionFetch.resolves('test');
+  });
+
+  afterEach(() => {
+    sessionFetch.restore();
   });
 
   describe('GET /api/yt/entries/info', () => {
