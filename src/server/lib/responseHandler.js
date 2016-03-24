@@ -19,10 +19,10 @@ const generateResponse = (promise, res) => {
     .then(output => {
       res.json(output);
   });
-}
+};
 
 const responseHandler = {
-  respond: (req, res, promise, isSecured, confirmSession) => {
+  respond: (req, res, promise, isSecured, confirmSession = () => true) => {
     let securePromise = promise;
     if (isSecured) {
       securePromise = Sessions.fetchByID(req.headers['session-id']).then(session => {
