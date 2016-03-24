@@ -157,4 +157,14 @@ describe('The Users API', () => {
       expect(gotEntry).to.deep.equal(entry);
     });
   });
+
+  describe('The client User model login method', () => {
+    it_('returns all entries associated with a user', function * getUserEntries() {
+      fetch = sinon.stub(request, 'clientFetch');
+      fetch.resolves(entry);
+      const gotEntry = yield User.getEntriesForUser('asdgq');
+      expect(fetch.calledWith('/api/yt/users/entries/asdgq')).to.equal(true);
+      expect(gotEntry).to.deep.equal(entry);
+    });
+  });
 });

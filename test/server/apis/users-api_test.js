@@ -62,15 +62,15 @@ describe('The Users API', () => {
 
   describe('when calling POST to insert or update using authID', () => {
     it_('returns the user object when given an authID and fields', function * insertOrUpdate() {
-      modelStub = sinon.stub(User, 'insertOrUpdateUsingAuthID');
+      modelStub = sinon.stub(User, 'login');
       modelStub.resolves(fakeUser);
       yield request(app)
       .post('/api/yt/users/asdgq')
       .send(fakeUser)
       .expect(200)
       .expect(response => {
-        expect(response.body.data).to.deep.equal(fakeUser);
-        expect(modelStub.calledWith('asdgq', fakeUser)).to.equal(true);
+        expect(response.body.data, 'response body').to.deep.equal(fakeUser);
+        expect(modelStub.calledWith('asdgq', fakeUser), 'called with').to.equal(true);
       });
     });
     it_('returns an error if there are incomplete fields', function * insertOrUpdateError() {

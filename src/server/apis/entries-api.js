@@ -6,23 +6,31 @@ const respond = require('../lib/responseHandler').respond;
 // These handle all of the requests to the database.
 
 router.get('/', (req, res) => {
-  respond(Entry.getEntriesWithUsers(req.query.offset, req.query.limit), res);
+  respond(req, res, Entry.getEntriesWithUsers(req.query.offset, req.query.limit));
 });
 
 router.delete('/:id', (req, res) => {
-  respond(Entry.remove(req.params.id), res);
+  const confirmSession = (session) => {
+    // find by id
+    // confirm that the userID for the entry matches the user id in the session
+  };
+  respond(req, res, Entry.remove(req.params.id), true, );
 });
 
 router.put('/:id', (req, res) => {
-  respond(Entry.updateByID(req.params.id, req.body), res);
+  const confirmSession = (session) => {
+    // find by id
+    // confirm that the userID for entry matches the user id in the session
+  };
+  respond(req, res, Entry.updateByID(req.params.id, req.body), true);
 });
 
 router.post('/', (req, res) => {
-  respond(Entry.create(req.body), res);
+  respond(req, res, Entry.create(req.body), true);
 });
 
 router.get('/info', (req, res) => {
-  respond(Youtube.getInfo(req.query.url), res);
+  respond(req, res, Youtube.getInfo(req.query.url), true);
 });
 
 module.exports = router;

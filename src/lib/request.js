@@ -10,6 +10,11 @@ const request = {
     return `${urlString}?${queryString.stringify(params)}`;
   },
   clientFetch: (...args) => {
+    const Auth = require('../client/models/auth');
+    const options = args[1] || {};
+    options.headers = options.headers || {};
+    options.headers['session-id'] = Auth.getSessionID();
+    args[1] = options;
     return request.fetch.apply(null, args)
       .then(response => {
         if(response.error !== null) return Promise.reject(new Error(response.error.message));

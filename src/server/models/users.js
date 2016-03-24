@@ -1,5 +1,6 @@
 const db = require('../lib/db');
 const Users = module.exports;
+const Sessions = require('./sessions');
 
 const fieldsArray = [
   'id',
@@ -59,6 +60,21 @@ Users.findByAuthID = (authID) => {
     if (response.length === 0) throw new Error('User does not exist');
     return response[0];
   });
+};
+
+Users.login = (authID, fields) => {
+  return Users.insertOrUpdateUsingAuthID(authID, fields)
+    .then(user => Sessions.deleteByUserID(user.id).then(() => user))
+    .then(user => {
+      return Sessions.create({ isAdmin: user.isAdmin, userID: user.id })
+      .then(sessionID => {
+        delete user.id;
+        return {
+          userData: user,
+          sessionID,
+        };
+      });
+    });
 };
 
 Users.insertOrUpdateUsingAuthID = (authID, fields) => {

@@ -29,13 +29,24 @@ const Auth = {
     return user;
   },
   clearCache: () => {
+    localStorage.setItem('session_id', null);
     localStorage.setItem('db_user', null);
+  },
+  cacheSessionID: (sessionID) => {
+    localStorage.setItem('session_id', sessionID);
   },
   login: () => {
     return Auth.loginThroughFacebook()
       .then(Auth.convertAuthUserToDatabaseUser)
       .then(user => User.insertOrUpdate(user.authID, user))
-      .then(Auth.cacheUser);
+      .then(response => {
+        Auth.cacheUser(response.userData);
+        Auth.cacheSessionID(response.sessionID);
+        return response.userData;
+      });
+  },
+  getSessionID: () => {
+    return localStorage.getItem('session_id');
   },
   isLoggedIn: () => {
     return OAuth.create('facebook') !== false;

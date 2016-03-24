@@ -4,19 +4,19 @@ const router = require('express').Router();
 const responseHandler = require('../lib/responseHandler');
 
 router.get('/:authID', (req, res) => {
-  responseHandler.respond(User.findByAuthID(req.params.authID), res);
+  responseHandler.respond(req, res, User.findByAuthID(req.params.authID), false);
 });
 
 router.post('/:authID', (req, res) => {
-  responseHandler.respond(User.insertOrUpdateUsingAuthID(req.params.authID, req.body), res);
+  responseHandler.respond(req, res, User.login(req.params.authID, req.body), false);
 });
 
 router.delete('/:id', (req, res) => {
-  responseHandler.respond(User.delete(req.params.id), res);
+  responseHandler.respond(req, res, User.delete(req.params.id), true);
 });
 
 router.get('/entries/:id', (req, res) => {
-  responseHandler.respond(User.getEntriesForUser(req.params.id), res);
+  responseHandler.respond(req, res, User.getEntriesForUser(req.params.id), false);
 });
 
 
