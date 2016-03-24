@@ -1,4 +1,4 @@
-/* global TEST_HELPER describe it_ TestHelper __server afterEach beforeEach expect */
+/* global TEST_HELPER describe beforeEach_ it_ TestHelper __server afterEach beforeEach expect */
 'use strict';
 require(TEST_HELPER);
 const sinon = require('sinon');
@@ -7,12 +7,15 @@ const Youtube = require(`${__server}/models/youtube`);
 const request = require('supertest');
 const ytOutput = require('../models/ytResult').output;
 require('sinon-as-promised');
+const Sessions = require(`${__server}/models/sessions`);
+const db = require(`${__server}/lib/db`);
 
 describe('The Entries API', () => {
   let app = null;
   let modelStub = null;
   const data = { id: 1, url: 'youtube.com/sxsw' };
-  beforeEach(() => {
+  
+  beforeEach_(function * generator() {
     app = TestHelper.createApp();
   });
 
@@ -34,14 +37,19 @@ describe('The Entries API', () => {
     });
   });
 
-  describe('DELETE /entries', () => {
+  describe.only('DELETE /entries', () => {
     it_('deletes an entry', function * deletesLinks() {
       modelStub = sinon.stub(Entry, 'remove');
       modelStub.resolves({ success: true });
+      const sessionFetch = sinon.stub(Sessions, 'fetchByID');
+      sessionFetch.resolves('test')
+      // console.log('sessions', session)
       yield request(app)
         .delete('/api/yt/entries/1')
         .expect(200)
+        .set('session-id', 'test')
         .expect(response => {
+          console.log('responsesdfa', response.body)
           expect(modelStub.calledWith('1')).to.equal(true);
           expect(response.body.data.success).to.equal(true);
         });
