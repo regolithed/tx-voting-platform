@@ -46,6 +46,9 @@ const Entry = {
     return request.clientFetch(request.addParams('/api/yt/entries/info', { url }))
       .then(processData);
   },
+  getRefreshStats: (urlArray) => {
+    return request.clientFetch(request.addParams('http://localhost:4000/api/yt/entries/refreshStats', { urlArray }));
+  },
   delete: (id) => {
     return request.clientFetch(`/api/yt/entries/${id}`, {
       method: 'DELETE',

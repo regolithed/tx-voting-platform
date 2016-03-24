@@ -57,4 +57,8 @@ router.get('/info', (req, res) => {
   });
 });
 
+router.get('/refreshStats', (req, res) => {
+  respond(Youtube.getBatchInfo(), res);
+});
+
 module.exports = router;

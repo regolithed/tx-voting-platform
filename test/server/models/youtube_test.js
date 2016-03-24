@@ -1,18 +1,135 @@
-/* global TEST_HELPER describe it_ TestHelper __server __lib beforeEach expect */
+/* global TEST_HELPER describe it_ TestHelper __server __lib beforeEach_ expect */
 'use strict';
 require(TEST_HELPER);
 const sinon = require('sinon');
 const Youtube = require(`${__server}/models/youtube`);
 const ytOutput = require('./ytResult').output;
+const ytBatchOutput = require('./ytBatchResult').output;
 const unshortener = require(`${__server}/lib/unshortener`);
 const request = require(`${__lib}/request`);
+const Users = require(`${__server}/models/users`);
+const Entries = require(`${__server}/models/entries`);
+const db = require(`${__server}/lib/db`);
 require('sinon-as-promised');
+
+// const urlArray = [
+//   'https://www.youtube.com/watch?v=iZLP4qOwY8I',
+//   'https://www.youtube.com/watch?v=2d7s3spWAzo',
+//   'https://www.youtube.com/watch?v=DFP6UDgVJtE',
+//   'https://www.youtube.com/watch?v=TWBDa5dqrl8',
+// ];
+
+// const urlString = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=iZLP4qOwY8I,2d7s3spWAzo,DFP6UDgVJtE,TWBDa5dqrl8&key=${process.env.YOUTUBE_API_KEY}`;
+
+// const ytErrorObj = {
+//   error: {
+//     errors: [
+//       {
+//         domain: 'usageLimits',
+//         reason: 'keyInvalid',
+//         message: 'Bad Request',
+//       },
+//     ],
+//     code: 400,
+//     message: 'Bad Request',
+//   },
+// };
+
+
+const testUser = {
+  id: 0,
+  userName: 'clay',
+  email: 'clay@test.com',
+  isAdmin: false,
+  authID: 'qgraerdfb',
+};
+
+const entry = {
+  id: 8,
+  title: 'test',
+  embedID: 'iZLP4qOwY8I',
+  thumbnailURL: 'google.com',
+  statistics: {
+    stuff: 'test',
+  },
+  description: 'description',
+  sortMetric: 19,
+  userID: 0,
+};
+
+const testUser1 = {
+  id: 5,
+  userName: 'dylan',
+  email: 'dylan@test.com',
+  isAdmin: false,
+  authID: 'lkjh',
+};
+
+const entry1 = {
+  id: 9,
+  title: 'test',
+  embedID: '2d7s3spWAzo',
+  thumbnailURL: 'yahoo.com',
+  statistics: {
+    stuff: 'test',
+  },
+  description: 'description',
+  sortMetric: 100,
+  userID: 5,
+};
+
+const testUser2 = {
+  id: 2,
+  userName: 'austin',
+  email: 'dylan@test.com',
+  isAdmin: false,
+  authID: 'dhtfx',
+};
+
+const entry2 = {
+  id: 10,
+  title: 'test',
+  embedID: 'DFP6UDgVJtE',
+  thumbnailURL: 'yahoo.com',
+  statistics: {
+    stuff: 'test',
+  },
+  description: 'description',
+  sortMetric: 1000,
+  userID: 2,
+};
+
+const testUser3 = {
+  id: 3,
+  userName: 'Notaustin',
+  email: 'dylajn@test.com',
+  isAdmin: false,
+  authID: 'dhtkx',
+};
+
+const entry3 = {
+  id: 13,
+  title: 'test',
+  embedID: '5',
+  thumbnailURL: 'yahoso.com',
+  statistics: {
+    stuff: 'test',
+  },
+  description: 'description',
+  sortMetric: 10000,
+  userID: 3,
+};
+
+beforeEach_(function * generator() {
+  yield TestHelper.emptyDb(db);
+});
+
 
 describe('The Youtube Model', () => {
   const sample = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
   const shortenedSample = 'http://bit.ly/OUv03h';
 
-  describe('Get Video Info', () => {
+  describe('Gets Video Info', () => {
     it_('gets data from youtube', function * ytinfo() {
       const fetch = sinon.stub(request, 'fetch');
       fetch.resolves(ytOutput);
@@ -33,8 +150,23 @@ describe('The Youtube Model', () => {
     });
   });
 
-    // describe('Get Video Info', () => {
-    //   it_('gets batch data from youtube', function * ytinfo() {
-    //   }
-  // describe('Shortens a shortened link')
+  describe.only('Gets updated statistics for multiple videos', () => {
+    it_('gets batch data from youtube', function * ytinfo() {
+      yield Users.insert(testUser);
+      yield Entries.create(entry);
+      yield Users.insert(testUser1);
+      yield Entries.create(entry1);
+      yield Users.insert(testUser2);
+      yield Entries.create(entry2);
+      yield Users.insert(testUser3);
+      yield Entries.create(entry3);
+      const fetch = sinon.stub(request, 'fetch');
+      fetch.resolves(ytBatchOutput);
+
+      const batchResponse = yield Youtube.getBatchInfo();
+      // expect(fetch.calledWith(urlString)).to.equal(true);
+      expect(batchResponse).to.deep.equal(ytBatchOutput);
+      // fetch.restore();
+    });
+  });
 });

@@ -6,8 +6,16 @@ const Entry = require(`${__server}/models/entries`);
 const Youtube = require(`${__server}/models/youtube`);
 const request = require('supertest');
 const ytOutput = require('../models/ytResult').output;
+const ytBatchOutput = require('../models/ytBatchResult').output;
 require('sinon-as-promised');
 const Sessions = require(`${__server}/models/sessions`);
+
+const urlArray = [
+  'https://www.youtube.com/watch?v=iZLP4qOwY8I',
+  'https://www.youtube.com/watch?v=2d7s3spWAzo',
+  'https://www.youtube.com/watch?v=DFP6UDgVJtE',
+  'https://www.youtube.com/watch?v=TWBDa5dqrl8',
+];
 
 describe('The Entries API', () => {
   let app = null;
@@ -88,7 +96,7 @@ describe('The Entries API', () => {
   });
 });
 
-describe('The Youtube API', () => {
+describe.only('The Youtube API', () => {
   let app = null;
   const info = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
   const badInfo = 'bit.ly/1pbHRQy';
@@ -119,7 +127,7 @@ describe('The Youtube API', () => {
       getInfo.restore();
     });
 
-    it_('sends an error when an invalid url is submitted', function *urlValid() {
+    it_('sends an error when an invalid url is submitted', function * urlValid() {
       const getInfo = sinon.stub(Youtube, 'getInfo');
       getInfo.rejects(new Error('Invalid protocol'));
       yield request(app)
@@ -131,6 +139,22 @@ describe('The Youtube API', () => {
           expect(Youtube.getInfo.calledOnce).to.equal(true);
         });
       getInfo.restore();
+    });
+  });
+
+  describe('GET /api/yt/entries/refreshStats', () => {
+    it_('gets mutiple videos info when passed array of URLs', function * getBatchYTInfo() {
+      const getBatch = sinon.stub(Youtube, 'getBatchInfo');
+      getBatch.resolves(ytBatchOutput);
+      yield request(app)
+        .get('/api/yt/entries/refreshStats')
+        .expect(200)
+        .query({ url: urlArray })
+        .expect(response => {
+          expect(response.body.data.items.length).to.equal(urlArray.length);
+          expect(Youtube.getBatchInfo.calledOnce).to.equal(true);
+        });
+      getBatch.restore();
     });
   });
 });

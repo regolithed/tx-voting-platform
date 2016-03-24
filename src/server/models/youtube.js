@@ -1,6 +1,7 @@
 const Request = require('../../lib/request');
 const unshortener = require('../lib/unshortener');
 const Url = require('url');
+const db = require('../lib/db');
 
 const Youtube = module.exports;
 const base = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=';
@@ -36,18 +37,38 @@ Youtube.getInfo = (url) => {
   });
 };
 
-Youtube.getBatchInfo = (urlArray) => {
-  const idString = urlArray.map((url) => {
-    return Url.parse(url, true).query.v;
-  }).join(',');
-
-  const cleanUrl = `${base}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
-
-  return Request.fetch(cleanUrl)
-  .then((response) => {
-    return response;
-  })
+Youtube.getBatchInfo = () => {
+  const refreshBase = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=';
+  const idArray = [];
+  const resultArray = [];
+  return db.select('embedID').from('entries')
+  .returning('embedID')
+  .then(response => {
+    response.forEach(obj => {
+      idArray.push(obj.embedID);
+    });
+    const idString = idArray.join(',');
+    const cleanUrl = `${refreshBase}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
+    console.log(cleanUrl);
+    return Request.fetch(cleanUrl)
+    .then((resp) => {
+      resp.items.forEach(entry => {
+        console.log('entry', entry);
+        resultsArray.push(entry.id);
+      });
+        return db('entries').where('embedID', entry.id)
+        .returning('statistics')
+        .update({ statistics: entry.statistics })
+        .then(res => {
+          resultArray.push(res);
+        });
+      return resultArray;
+    })
+    .then(result => {
+      return result;
+    })
   .catch((error) => {
     throw new Error('Something went wrong with the provided urls:', error);
+  });
   });
 };

@@ -56,6 +56,13 @@ describe('The client entry model', () => {
     expect(ytInfo, 'data result').to.deep.equal(dataResult);
   });
 
+  // it_('takes an array of urls and returns batch data from Youtube', function * getYTBatch() {
+  //   const fetch = sinon.stub(request, 'clientFetch');
+  //   fetch.resolves
+
+  //   fetch.resolve();
+  // });
+
   it_('updates an entry given an id and fields to update', function * updateEntry() {
     fetch.resolves(updated);
     const args = [`/api/yt/entries/${1}`,
