@@ -36,6 +36,12 @@ Entry.read = function read() {
   });
 };
 
+Entry.fetchByID = (id) => {
+  return db('entries').where('id', id)
+    .select('*')
+    .then(entries => entries[0]);
+};
+
 Entry.updateByID = function update(id, fields) {
   return db('entries').where('id', id)
   .returning(fieldsArray)
@@ -50,6 +56,10 @@ Entry.updateByID = function update(id, fields) {
       throw new Error('Database Update error');
     }
   );
+};
+
+Entry.createdByUser = (entryID, userID) => {
+  return Entry.fetchByID(entryID).then(entry => userID === entry.userID);
 };
 
 Entry.remove = function remove(id) {

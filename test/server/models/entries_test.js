@@ -210,4 +210,23 @@ describe('The entries model', () => {
     const entryAndUser1 = yield Entries.getEntriesWithUsers(0, 3);
     expect(entryAndUser1).to.deep.equal(sortedObject);
   });
+
+  it_('fetches an entry by id', function * getVideos() {
+    yield Entries.create(entry);
+    const foundEntry = yield Entries.fetchByID(8);
+    expect(foundEntry).to.deep.equal(entry);
+  });
+
+  describe.only('the createdByUser helper', () => {
+    it_('returns true if an entry was created by a user', function * getVideos() {
+      yield Entries.create(entry);
+      const isCreatedByUser = yield Entries.createdByUser(8, 0);
+      expect(isCreatedByUser).to.equal(true);
+    });
+    it_('returns false if an entry was not created by a user', function * getVideos() {
+      yield Entries.create(entry);
+      const isCreatedByUser = yield Entries.createdByUser(8, 2);
+      expect(isCreatedByUser).to.equal(false);
+    });
+  });
 });

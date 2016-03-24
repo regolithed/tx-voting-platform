@@ -53,8 +53,10 @@ describe('The Auth client model', () => {
   });
   it('logs a user out', () => {
     localStorage.setItem('db_user', 'test');
+    localStorage.setItem('session_id', 'test');
     Auth.logout();
     expect(localStorage.getItem('db_user')).to.equal('null');
+    expect(localStorage.getItem('session_id')).to.equal('null');
     expect(clearCacheStub.callCount).to.equal(1);
   });
 });
