@@ -41,9 +41,13 @@ describe('The Auth client model', () => {
       isAdmin: false,
     };
     loginThroughFacebookStub.resolves(userResponse);
-    insertOrUpdateStub.resolves(expectedUser);
+    insertOrUpdateStub.resolves({
+      userData: expectedUser,
+      sessionID: 'test',
+    });
     const returnedUser = yield Auth.login();
     expect(JSON.parse(localStorage.getItem('db_user'))).to.deep.equal(expectedUser);
+    expect(localStorage.getItem('session_id')).to.equal('test');
     expect(insertOrUpdateStub.calledWith('1000', expectedUser), 'model was called').to.equal(true);
     expect(returnedUser, 'output is correct').to.deep.equal(expectedUser);
   });

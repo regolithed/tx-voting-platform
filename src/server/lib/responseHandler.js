@@ -29,14 +29,12 @@ const responseHandler = {
         if (confirmSession(session)) {
           return promise;
         } else {
-          return Promise.reject( new Error('Invalid Session ID'));
+          return Promise.reject(new Error('Invalid Session ID'));
         }
       });
     }
     generateResponse(securePromise, res);
   },
 };
-
-
 
 module.exports = responseHandler;
