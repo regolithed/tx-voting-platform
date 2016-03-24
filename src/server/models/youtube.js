@@ -40,35 +40,40 @@ Youtube.getInfo = (url) => {
 Youtube.getBatchInfo = () => {
   const refreshBase = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=';
   const idArray = [];
-  const resultArray = [];
   return db.select('embedID').from('entries')
   .returning('embedID')
   .then(response => {
     response.forEach(obj => {
       idArray.push(obj.embedID);
     });
-    const idString = idArray.join(',');
-    const cleanUrl = `${refreshBase}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
-    console.log(cleanUrl);
-    return Request.fetch(cleanUrl)
+
+    // assign 50 strings at a time to idString and pass into clean url
+    // let idString;
+    while (idArray.length) {
+      const idString = idArray.splice(0, 40).join(',');
+
+    // const idString = idArray.join(',');
+      const cleanUrl = `${refreshBase}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
+      return Request.fetch(cleanUrl)
     .then((resp) => {
-      resp.items.forEach(entry => {
-        console.log('entry', entry);
-        resultsArray.push(entry.id);
-      });
+      const resultArray = resp.items.map(entry => {
         return db('entries').where('embedID', entry.id)
         .returning('statistics')
         .update({ statistics: entry.statistics })
         .then(res => {
-          resultArray.push(res);
+          return res[0];
         });
-      return resultArray;
+      });
+      return Promise.all(resultArray);
     })
     .then(result => {
       return result;
     })
-  .catch((error) => {
-    throw new Error('Something went wrong with the provided urls:', error);
-  });
+    .catch((error) => {
+      throw new Error('Something went wrong with the provided urls:', error);
+    });
+
+    // end fetch chain
+    }
   });
 };

@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const Youtube = require(`${__server}/models/youtube`);
 const ytOutput = require('./ytResult').output;
 const ytBatchOutput = require('./ytBatchResult').output;
+const ytBatchReturned = require('./ytBatchResult').returned;
 const unshortener = require(`${__server}/lib/unshortener`);
 const request = require(`${__lib}/request`);
 const Users = require(`${__server}/models/users`);
@@ -12,14 +13,7 @@ const Entries = require(`${__server}/models/entries`);
 const db = require(`${__server}/lib/db`);
 require('sinon-as-promised');
 
-// const urlArray = [
-//   'https://www.youtube.com/watch?v=iZLP4qOwY8I',
-//   'https://www.youtube.com/watch?v=2d7s3spWAzo',
-//   'https://www.youtube.com/watch?v=DFP6UDgVJtE',
-//   'https://www.youtube.com/watch?v=TWBDa5dqrl8',
-// ];
-
-// const urlString = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=iZLP4qOwY8I,2d7s3spWAzo,DFP6UDgVJtE,TWBDa5dqrl8&key=${process.env.YOUTUBE_API_KEY}`;
+const urlString = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=iZLP4qOwY8I,2d7s3spWAzo,DFP6UDgVJtE,TWBDa5dqrl8&key=${process.env.YOUTUBE_API_KEY}`;
 
 // const ytErrorObj = {
 //   error: {
@@ -110,7 +104,7 @@ const testUser3 = {
 const entry3 = {
   id: 13,
   title: 'test',
-  embedID: '5',
+  embedID: 'TWBDa5dqrl8',
   thumbnailURL: 'yahoso.com',
   statistics: {
     stuff: 'test',
@@ -150,7 +144,7 @@ describe('The Youtube Model', () => {
     });
   });
 
-  describe.only('Gets updated statistics for multiple videos', () => {
+  describe('Gets updated statistics for multiple videos', () => {
     it_('gets batch data from youtube', function * ytinfo() {
       yield Users.insert(testUser);
       yield Entries.create(entry);
@@ -164,9 +158,9 @@ describe('The Youtube Model', () => {
       fetch.resolves(ytBatchOutput);
 
       const batchResponse = yield Youtube.getBatchInfo();
-      // expect(fetch.calledWith(urlString)).to.equal(true);
-      expect(batchResponse).to.deep.equal(ytBatchOutput);
-      // fetch.restore();
+      expect(fetch.calledWith(urlString)).to.equal(true);
+      expect(batchResponse).to.deep.equal(ytBatchReturned);
+      fetch.restore();
     });
   });
 });

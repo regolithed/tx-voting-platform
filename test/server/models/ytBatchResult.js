@@ -58,4 +58,27 @@ ytBatchResult.output ={
       }
     }
   ]
-}
+};
+
+ytBatchResult.returned = [ 
+  { viewCount: '18022',
+    likeCount: '498',
+    dislikeCount: '4',
+    favoriteCount: '0',
+    commentCount: '156' },
+  { viewCount: '21156',
+    likeCount: '686',
+    dislikeCount: '3',
+    favoriteCount: '0',
+    commentCount: '218' },
+  { viewCount: '15991',
+    likeCount: '648',
+    dislikeCount: '4',
+    favoriteCount: '0',
+    commentCount: '142' },
+  { viewCount: '11964',
+    likeCount: '645',
+    dislikeCount: '4',
+    favoriteCount: '0',
+    commentCount: '90' },
+  ];
