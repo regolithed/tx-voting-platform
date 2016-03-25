@@ -13,7 +13,6 @@ const fieldsArray = [
 ];
 
 const userFields = [
-  'userName',
   'userID',
   'email',
   'photo',
@@ -43,7 +42,7 @@ Entry.create = function create(entry) {
 Entry.userIsAllowedAccess = (entryID, userID) => {
   return Entry.createdByUser(entryID, userID)
   .then(createdByUser => {
-    console.log('createdByUser', createdByUser);
+    console.log('createdByUser', createdByUser)
     return createdByUser || Promise.reject(new Error('Not allowed to edit this entry'));
   });
 };
