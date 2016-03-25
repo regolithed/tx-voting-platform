@@ -10,13 +10,6 @@ const ytBatchOutput = require('../models/ytBatchResult').output;
 require('sinon-as-promised');
 const Sessions = require(`${__server}/models/sessions`);
 
-const urlArray = [
-  'https://www.youtube.com/watch?v=iZLP4qOwY8I',
-  'https://www.youtube.com/watch?v=2d7s3spWAzo',
-  'https://www.youtube.com/watch?v=DFP6UDgVJtE',
-  'https://www.youtube.com/watch?v=TWBDa5dqrl8',
-];
-
 describe('The Entries API', () => {
   let app = null;
   let modelStub = null;
@@ -96,7 +89,7 @@ describe('The Entries API', () => {
   });
 });
 
-describe.only('The Youtube API', () => {
+describe('The Youtube API', () => {
   let app = null;
   const info = 'https://www.youtube.com/watch?v=FzRH3iTQPrk';
   const badInfo = 'bit.ly/1pbHRQy';
@@ -149,9 +142,7 @@ describe.only('The Youtube API', () => {
       yield request(app)
         .get('/api/yt/entries/refreshStats')
         .expect(200)
-        .query({ url: urlArray })
-        .expect(response => {
-          expect(response.body.data.items.length).to.equal(urlArray.length);
+        .expect(() => {
           expect(Youtube.getBatchInfo.calledOnce).to.equal(true);
         });
       getBatch.restore();

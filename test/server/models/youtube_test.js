@@ -6,6 +6,7 @@ const Youtube = require(`${__server}/models/youtube`);
 const ytOutput = require('./ytResult').output;
 const ytBatchOutput = require('./ytBatchResult').output;
 const ytBatchReturned = require('./ytBatchResult').returned;
+const ytBadBatchOutput = require('./ytBatchResult').ytBatchBadOutput;
 const unshortener = require(`${__server}/lib/unshortener`);
 const request = require(`${__lib}/request`);
 const Users = require(`${__server}/models/users`);
@@ -14,21 +15,6 @@ const db = require(`${__server}/lib/db`);
 require('sinon-as-promised');
 
 const urlString = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=iZLP4qOwY8I,2d7s3spWAzo,DFP6UDgVJtE,TWBDa5dqrl8&key=${process.env.YOUTUBE_API_KEY}`;
-
-// const ytErrorObj = {
-//   error: {
-//     errors: [
-//       {
-//         domain: 'usageLimits',
-//         reason: 'keyInvalid',
-//         message: 'Bad Request',
-//       },
-//     ],
-//     code: 400,
-//     message: 'Bad Request',
-//   },
-// };
-
 
 const testUser = {
   id: 0,
@@ -114,6 +100,19 @@ const entry3 = {
   userID: 3,
 };
 
+const testInvalidEntry = {
+  id: 99,
+  title: 'test',
+  embedID: 'TWBDa444444',
+  thumbnailURL: 'yahoso.com',
+  statistics: {
+    stuff: 'test',
+  },
+  description: 'description',
+  sortMetric: 10000,
+  userID: 3,
+};
+
 beforeEach_(function * generator() {
   yield TestHelper.emptyDb(db);
 });
@@ -161,6 +160,13 @@ describe('The Youtube Model', () => {
       expect(fetch.calledWith(urlString)).to.equal(true);
       expect(batchResponse).to.deep.equal(ytBatchReturned);
       fetch.restore();
+    });
+    it_('handles database read errors', function * ytError() {
+      try {
+        yield Youtube.getBatchInfo();
+      } catch (error) {
+        expect(error.message).to.equal('Database Read Error: Invalid Url');
+      }
     });
   });
 });
