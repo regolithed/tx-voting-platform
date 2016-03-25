@@ -25,7 +25,7 @@ const testUser = {
 };
 
 const entry = {
-  id: 8,
+  id: 0,
   title: 'test',
   embedID: 'iZLP4qOwY8I',
   thumbnailURL: 'google.com',
@@ -34,7 +34,7 @@ const entry = {
   },
   description: 'description',
   sortMetric: 19,
-  userID: 0,
+  userAuthID: 'qgraerdfb',
 };
 
 const testUser1 = {
@@ -55,7 +55,7 @@ const entry1 = {
   },
   description: 'description',
   sortMetric: 100,
-  userID: 5,
+  userAuthID: 'lkjh',
 };
 
 const testUser2 = {
@@ -76,7 +76,7 @@ const entry2 = {
   },
   description: 'description',
   sortMetric: 1000,
-  userID: 2,
+  userAuthID: 'dhtfx',
 };
 
 const testUser3 = {
@@ -97,7 +97,7 @@ const entry3 = {
   },
   description: 'description',
   sortMetric: 10000,
-  userID: 3,
+  userAuthID: 'dhtkx',
 };
 
 const testInvalidEntry = {
@@ -110,7 +110,7 @@ const testInvalidEntry = {
   },
   description: 'description',
   sortMetric: 10000,
-  userID: 3,
+  userAuthID: 'dhtkx',
 };
 
 beforeEach_(function * generator() {
@@ -155,7 +155,6 @@ describe('The Youtube Model', () => {
       yield Entries.create(entry3);
       const fetch = sinon.stub(request, 'fetch');
       fetch.resolves(ytBatchOutput);
-
       const batchResponse = yield Youtube.getBatchInfo();
       expect(fetch.calledWith(urlString)).to.equal(true);
       expect(batchResponse).to.deep.equal(ytBatchReturned);
