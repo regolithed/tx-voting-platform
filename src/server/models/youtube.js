@@ -1,9 +1,14 @@
+
 const Request = require('../../lib/request');
 const unshortener = require('../lib/unshortener');
+const CronJob = require('cron').CronJob;
 const Url = require('url');
+const chunk = require('lodash/chunk');
+const db = require('../lib/db');
 
 const Youtube = module.exports;
 const base = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics,player&id=';
+
 Youtube.getInfo = (url) => {
   'use strict';
   let shortenedUrl;
@@ -36,18 +41,49 @@ Youtube.getInfo = (url) => {
   });
 };
 
-Youtube.getBatchInfo = (urlArray) => {
-  const idString = urlArray.map((url) => {
-    return Url.parse(url, true).query.v;
-  }).join(',');
 
-  const cleanUrl = `${base}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
-
-  return Request.fetch(cleanUrl)
-  .then((response) => {
-    return response;
+Youtube.getBatchInfo = () => {
+  const refreshBase = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=';
+  return db.select('embedID').from('entries')
+  .returning('embedID')
+  .then(response => {
+    if (!response.length) {
+      throw new Error('Database Read Error');
+    }
+    // map response to array of ids
+    const idArray = response.map(obj => {
+      return obj.embedID;
+    });
+    // chunk idArray into an array of smaller arrays
+    const chunkedArray = chunk(idArray, 40);
+    const mappedRequest = chunkedArray.map(array => {
+      const idString = array.join(',');
+      const cleanUrl = `${refreshBase}${idString}&key=${process.env.YOUTUBE_API_KEY}`;
+      return Request.fetch(cleanUrl)
+      .then(resp => {
+        const resultArray = resp.items.map(entry => {
+          return db('entries').where('embedID', entry.id)
+          .returning('statistics')
+          .update({ statistics: entry.statistics })
+          .then(res => {
+            return res[0];
+          });
+        });
+        return Promise.all(resultArray);
+      });
+    });
+    return Promise.all(mappedRequest);
   })
-  .catch((error) => {
-    throw new Error('Something went wrong with the provided urls:', error);
+  .then(result => {
+    return result[0];
+  })
+  .catch(() => {
+    throw new Error('Database Read Error: Invalid Url');
   });
 };
+// '00 00 0,12 * * 0-6' - for firing cron every day at noon and midnight
+const job = new CronJob('00 00 0,12 * * 0-6', () => {
+  Youtube.getBatchInfo();
+  const d = new Date();
+  console.log('==============Cronjob has fired at:', d.toLocaleString(), '==========');
+}, null, true, 'America/Chicago');
