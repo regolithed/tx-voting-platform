@@ -19,8 +19,7 @@ const generateResponse = (promise, res) => {
     })
     .then(output => {
       res.json(output);
-      db.destroy();
-  });
+    });
 };
 
 const responseHandler = {
