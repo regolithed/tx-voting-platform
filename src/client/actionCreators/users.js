@@ -40,13 +40,15 @@ actions.receiveLoggedInUserError = (error) => ({
   error,
 });
 
-actions.receiveLoginResponse = (response) => ({
+actions.receiveLoginResponse = (response, time = Date.now()) => ({
   type: 'RECEIVE_LOGIN_RESPONSE',
   response,
+  time,
 });
 
-actions.clearUserData = () => ({
+actions.clearUserData = (time = Date.now()) => ({
   type: 'CLEAR_USER_DATA',
+  time,
 });
 
 actions.logOut = () => {
