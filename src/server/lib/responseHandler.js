@@ -1,4 +1,5 @@
 const Sessions = require('../models/sessions');
+const db = require('./db');
 const generateResponse = (promise, res) => {
   promise
     .then(data => {
@@ -18,7 +19,7 @@ const generateResponse = (promise, res) => {
     })
     .then(output => {
       res.json(output);
-  });
+    });
 };
 
 const responseHandler = {

@@ -15,6 +15,8 @@ const successMap = {
   RECEIVE_NEW_ENTRY: () => 'Entry created successfully!',
   RECEIVE_UPDATED_ENTRY: () => 'Entry updated successfully!',
   RECEIVE_ENTRY_DELETE: () => 'Entry deleted successfully!',
+  RECEIVE_LOGIN_RESPONSE: () => 'Logged in successfully!',
+  CLEAR_USER_DATA: () => 'Logged out succesfully!',
 };
 
 const infoMap = {

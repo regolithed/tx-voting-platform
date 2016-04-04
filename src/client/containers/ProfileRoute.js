@@ -51,7 +51,7 @@ const mapStateToProps = (state, ownProps) => {
   const entriesWithUsers = entries.map((entry) => {
     return {
       ...entry,
-      user: profileUser,
+      user: profileUser.get('data').toJS(),
     };
   });
   return {
