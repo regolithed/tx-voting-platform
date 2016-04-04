@@ -40,6 +40,11 @@ actions.receiveLoggedInUserError = (error) => ({
   error,
 });
 
+actions.receiveLoginResponse = (response) => ({
+  type: 'RECEIVE_LOGIN_RESPONSE',
+  response,
+});
+
 actions.clearUserData = () => ({
   type: 'CLEAR_USER_DATA',
 });
@@ -58,6 +63,7 @@ actions.login = () => {
     onRequest: () => actions.requestLoggedInUser(),
     onSuccess: (user) => {
       return [
+        actions.receiveLoginResponse(user),
         actions.receiveLoggedInUser(user),
         push('/'),
       ];
